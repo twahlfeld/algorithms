@@ -20,13 +20,13 @@
 #define __PTHRD_SORT__
 
 typedef struct Arr_Cont {
-	void *base;
-	size_t nel;
-	size_t width;
-	int (*cmp)(const void *, const void *);
+    void *base;
+    size_t nel;
+    size_t width;
+    int (*cmp)(const void *, const void *);
 } Arr_Cont;
 
 void merge_sort(void *base, size_t nel, size_t width,
-				int (*cmp)(const void *, const void *));
+                int (*cmp)(const void *, const void *));
 
 #endif
