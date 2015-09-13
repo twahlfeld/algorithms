@@ -23,7 +23,7 @@
 #include "sort.h"
 
 Arr_Cont *copy_cont(Arr_Cont *src, int begin, size_t nel);
-void *merge_sort_r(void *data);
+void merge_sort_r(void *data);
 void merge(Arr_Cont *base, Arr_Cont *L, Arr_Cont *R);
 void free_arr_cont(Arr_Cont *data);
 void check_pthread(int rc);
@@ -60,11 +60,12 @@ void merge_sort(void *base, size_t nel, size_t width,
     sort_data.nel = nel;
     sort_data.width = width;
     sort_data.cmp = cmp;
-    check_pthread(pthread_create(&main_thread, NULL, merge_sort_r, (void *) &sort_data));
+    check_pthread(pthread_create(&main_thread, NULL,
+                  (void *)merge_sort_r, (void *) &sort_data));
     pthread_join(main_thread, NULL);
 }
 
-void *merge_sort_r(void *data)
+void merge_sort_r(void *data)
 {
     Arr_Cont *base = data;
     long nel = base->nel;
@@ -73,8 +74,10 @@ void *merge_sort_r(void *data)
         int middle = nel/2;
         Arr_Cont *L = copy_cont(base, 0, middle);
         Arr_Cont *R = copy_cont(base, middle, nel-middle);
-        check_pthread(pthread_create(&pthread_L, NULL, merge_sort_r, (void *)L));
-        check_pthread(pthread_create(&pthread_R, NULL, merge_sort_r, (void *)R));
+        check_pthread(pthread_create(&pthread_L, NULL,
+                      (void *)merge_sort_r, (void *)L));
+        check_pthread(pthread_create(&pthread_R, NULL,
+                      (void *)merge_sort_r, (void *)R));
         pthread_join(pthread_L, NULL);
         pthread_join(pthread_R, NULL);
         merge(base, L, R);
